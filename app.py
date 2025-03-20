@@ -1,12 +1,16 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 import subprocess
 
 app = Flask(__name__)
 
-@app.route('___RENAME___: /run_script')
+@app.route('/')
+def index():
+    return render_template('index_test.html')
+
+@app.route('/run_script')
 def run_script():
     try:
-        result = subprocess.run(['python', '___RENAME___: your_script.py'], capture_output=True, text=True, check=True)
+        result = subprocess.run(['python', 'your_script.py'], capture_output=True, text=True, check=True)
         return jsonify({'output': result.stdout})
     except subprocess.CalledProcessError as e:
         return jsonify({'error': str(e)}), 500
