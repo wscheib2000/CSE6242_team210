@@ -8,12 +8,14 @@
 </head>
 <body>
     <h2>Python and D3.js Integration</h2>
+    <input type="text" id="user-input" placeholder="Enter input" />
     <button id="fetch-data">Fetch Data from Python</button>
     <pre id="output"></pre>
 
     <script>
         document.getElementById('fetch-data').addEventListener('click', () => {
-            d3.json('/run_script')
+            const userInput = document.getElementById('user-input').value;
+            d3.json(`/run_script?input=${encodeURIComponent(userInput)}`)
                 .then(data => {
                     if (data.error) {
                         document.getElementById('output').textContent = 'Error: ' + data.error;
