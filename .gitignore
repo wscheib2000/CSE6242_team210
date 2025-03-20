@@ -174,5 +174,4 @@ cython_debug/
 *.csv
 scratch.py
 scratch.html
-prelim_eda_3_13_2025_srs.ipynb
 data/
