@@ -1,12 +1,15 @@
 /CSE6242_TEAM210
-│── README.md              # README file
-│── app.py                 # Flask app
-│── your_script.py         # Python script with similarity calculation
+│── README.md                   # README file
+│── app.py                      # Flask app
+│── your_script.py              # Python script with similarity calculation
 │── /static
-│   └── d3.v5.min.js       # D3.js library
-|   └── d3-dsv.min.js      # D3.js library
-|   └── d3-legend.min.js   # D3.js library
-|   └── d3-tip.min.js      # D3.js library
+│   └── d3.v5.min.js            # D3.js library
+|   └── d3-dsv.min.js           # D3.js library
+|   └── d3-legend.min.js        # D3.js library
+|   └── d3-tip.min.js           # D3.js library
 │── /templates
-│   └── index.html         # Actual HTML file
-|   └── index_test.html    # Test HTML file to make sure connections work
+│   └── index.html              # Actual HTML file
+|   └── index_test.html         # Test HTML file to make sure connections work
+│── /data
+│   └── millionsong_subset.csv  # Subset csv
+|   └── data.csv                # Full dataset csv, ONLY IF WE NEED IT
