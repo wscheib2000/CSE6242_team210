@@ -1,31 +1,31 @@
 <!DOCTYPE html>
 <head>
-<style>
+    <style>
 
-path.link {
-    fill: none;
-    stroke-width: 1.5px;
-}
+    path.link {
+        fill: none;
+        stroke-width: 1.5px;
+    }
 
-circle {
-    stroke: #fff;
-    stroke: black;
-    stroke-width: 1.5px;
-}
+    circle {
+        stroke: #fff;
+        stroke: black;
+        stroke-width: 1.5px;
+    }
 
-text {
-    fill: #000;
-    font: 10px sans-serif;
-    pointer-events: none;
-}
+    text {
+        fill: #000;
+        font: 10px sans-serif;
+        pointer-events: none;
+    }
 
-</style>
-<meta charset="utf-8">
-<title></title>
+    </style>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="{{ url_for('static', filename='d3.v5.min.js') }}"></script>
 </head>
 
 <body>
-<script type="text/javascript" src="../lib/d3.v5.min.js"></script>
 <script>
 
 
@@ -41,7 +41,7 @@ text {
 //     })
 //     .catch(error => console.error('Error fetching data:', error));
 
-d3.dsv(",", "board_games.csv", function(d) {
+d3.dsv(",", "/data/test.csv", function(d) {
     return {
         source: d.source,
         target: d.target,
@@ -59,87 +59,94 @@ d3.dsv(",", "board_games.csv", function(d) {
         link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
     });
 
+    nodes = d3.values(nodes);
+
     var width = 1200,
         height = 700;
+    
+    // nodes = d3.values(nodes);
+    // nodes.forEach(function(d) {
+    //     d.degree = links.filter(function(l) { return l.source === d || l.target === d; }).length;
+    // });
 
-    nodes = d3.values(nodes);
-    nodes.forEach(function(d) {
-        d.degree = links.filter(function(l) { return l.source === d || l.target === d; }).length;
-    });
+    // // scale the radius based on degree
+    // var radiusScale = d3.scaleLinear()
+    //     .domain([d3.min(nodes, function(d) { return d.degree; }), d3.max(nodes, function(d) { return d.degree; })])
+    //     .range([5, 20]);
 
-    // scale the radius based on degree
-    var radiusScale = d3.scaleLinear()
-        .domain([d3.min(nodes, function(d) { return d.degree; }), d3.max(nodes, function(d) { return d.degree; })])
-        .range([5, 20]);
-
-    radiusColorScale = d3.scaleLinear()
-        .domain([d3.min(nodes, function(d) { return d.degree; }), d3.max(nodes, function(d) { return d.degree; })])
-        .range(["#feebe2", "#7a0177"]);
+    // radiusColorScale = d3.scaleLinear()
+    //     .domain([d3.min(nodes, function(d) { return d.degree; }), d3.max(nodes, function(d) { return d.degree; })])
+    //     .range(["#feebe2", "#7a0177"]);
 
     var svg = d3.select("body").append("svg")
         .attr("width", width)
         .attr("height", height);
 
-    svg.append("text")
-        .attr("id", "credit")
-        .attr("x", 1190)
-        .attr("y", 10)
-        .attr("text-anchor", "end")
-        .attr("alignment-baseline", "hanging")
-        .text("wscheib3");
+    // svg.append("text")
+    //     .attr("id", "credit")
+    //     .attr("x", 1190)
+    //     .attr("y", 10)
+    //     .attr("text-anchor", "end")
+    //     .attr("alignment-baseline", "hanging")
+    //     .text("wscheib3");
 
     // add the links
-    var path = svg.append("g")
-        .selectAll("path")
-        .data(links)
-        .enter()
-        .append("path")
-        .attr("class", function(d) { return "link " + d.type; })
-        .attr("stroke", function(d) { return d.value === 0 ? "#666" : "green"; })
-        .attr("stroke-width", function(d) { return d.value === 0 ? 3 : 1; })
-        .attr("stroke-dasharray", function(d) { return d.value === 1 ? "5,5" : "none"; });
+    // var path = svg.append("g")
+    //     .selectAll("path")
+    //     .data(links)
+    //     .enter()
+    //     .append("path")
+    //     .attr("class", function(d) { return "link " + d.type; })
+    //     .attr("stroke", function(d) { return d.value === 0 ? "#666" : "green"; })
+    //     .attr("stroke-width", function(d) { return d.value === 0 ? 3 : 1; })
+    //     .attr("stroke-dasharray", function(d) { return d.value === 1 ? "5,5" : "none"; });
 
     // define the nodes
     var node = svg.selectAll(".node")
-        .enter().append("g")
+        .data(nodes)
+        .enter()
+        .append("g")
         .attr("class", "node")
         .on("dblclick", dblclick);
 
     // add the nodes
     node.append("circle")
         .attr("id", function(d){ return (d.name.replace(/\s+/g,'').toLowerCase()); })
-        .attr("r", function(d) { return radiusScale(d.degree); })
-        .attr("fill", function(d) { return radiusColorScale(d.degree); });
+        .attr("r", 30)
+        .attr("fill", "blue")
+        .attr("cx", function(d){ return 50 + 100*parseInt(d.name); })
+        .attr("cy", 100);
 
-    // add the labels
-    node.append("text")
-        .attr("x", 10)
-        .attr("y", -10)
-        .text(function(d) { return d.name; });
+    // // add the labels
+    // node.append("text")
+    //     .attr("x", 10)
+    //     .attr("y", -10)
+    //     .text(function(d) { return d.name; });
 
-    // add the curvy lines
-    function tick() {
-        path.attr("d", function(d) {
-            var dx = d.target.x - d.source.x,
-                dy = d.target.y - d.source.y,
-                dr = Math.sqrt(dx * dx + dy * dy);
-            return "M" +
-                d.source.x + "," +
-                d.source.y + "A" +
-                dr + "," + dr + " 0 0,1 " +
-                d.target.x + "," +
-                d.target.y;
-        });
+    // // add the curvy lines
+    // function tick() {
+    //     path.attr("d", function(d) {
+    //         var dx = d.target.x - d.source.x,
+    //             dy = d.target.y - d.source.y,
+    //             dr = Math.sqrt(dx * dx + dy * dy);
+    //         return "M" +
+    //             d.source.x + "," +
+    //             d.source.y + "A" +
+    //             dr + "," + dr + " 0 0,1 " +
+    //             d.target.x + "," +
+    //             d.target.y;
+    //     });
 
-        node.attr("transform", function(d) {
-            return "translate(" + d.x + "," + d.y + ")"; 
-        });
-    };
+    //     node.attr("transform", function(d) {
+    //         return "translate(" + d.x + "," + d.y + ")"; 
+    //     });
+    // };
 
     function dblclick(d) {
-        d3.select(this).select("circle").attr("fill", function(d) { return radiusColorScale(d.degree); });
-        d.fx = null;
-        d.fy = null;    
+        pass
+        // d3.select(this).select("circle").attr("fill", function(d) { return radiusColorScale(d.degree); });
+        // d.fx = null;
+        // d.fy = null;    
     };
 
 }).catch(function(error) {

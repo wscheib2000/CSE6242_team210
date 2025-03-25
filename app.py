@@ -1,11 +1,15 @@
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request, render_template, send_from_directory
 import subprocess
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('index_test.html')
+    return render_template('index.html')
+
+@app.route('/data/<filename>')
+def get_data(filename):
+    return send_from_directory('data', filename)
 
 @app.route('/run_script')
 def run_script():
