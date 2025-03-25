@@ -13,11 +13,13 @@ def get_data(filename):
 
 @app.route('/run_script')
 def run_script():
-    user_input = request.args.get('input', '')
+    center_node = request.args.get('center_node', '')
     
     try:
-        result = subprocess.run(['python', 'your_script.py', user_input], capture_output=True, text=True, check=True)
-        return jsonify({'output': result.stdout})
+        print(f"Running script with center_node: {center_node}")
+        result = subprocess.run(['python', './scripts/similarity.py', center_node], capture_output=True, text=True, check=True)
+        print(repr(result.stdout))
+        return result.stdout
     except subprocess.CalledProcessError as e:
         return jsonify({'error': str(e)}), 500
     except FileNotFoundError:

@@ -13,3 +13,5 @@
 │── /data
 │   └── millionsong_subset.csv  # Subset csv
 |   └── data.csv                # Full dataset csv, ONLY IF WE NEED IT
+│── /scripts
+│   └── similarity.py           # Script that prints the similarity results in csv format
