@@ -171,8 +171,8 @@ cython_debug/
 .pypirc
 
 # Experimentation files and output
+*.pkl
 *.csv
-scratch.py
-scratch.html
+scratch.*
 data/
 static/

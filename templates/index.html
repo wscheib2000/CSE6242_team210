@@ -8,13 +8,12 @@
     }
 
     circle {
-        stroke: #fff;
-        stroke: black;
+        stroke: #000;
         stroke-width: 1.5px;
     }
 
     text {
-        fill: #000;
+        fill: #fff;
         font: 10px sans-serif;
         pointer-events: none;
     }
@@ -41,15 +40,19 @@
 //     })
 //     .catch(error => console.error('Error fetching data:', error));
 
-var center_node = 0;
+var center_node = 910;
 
 d3.dsv(",", `/run_script?center_node=${center_node}`, function(d) {
+    console.log(d);
     return {
-        source: d.source,
-        target: d.target,
-        value: +d.value
+        source: center_node,
+        target: +d.index,
+        rank: +d.rank,
+        artist_name: d.artist_name,
+        similarity: +d.weighted_similarity
     }
 }).then(function(data) {
+    console.log(data);
 
     var links = data;
 
@@ -57,8 +60,8 @@ d3.dsv(",", `/run_script?center_node=${center_node}`, function(d) {
 
     // compute the distinct nodes from the links.
     links.forEach(function(link) {
-        link.source = nodes[link.source] || (nodes[link.source] = {name: link.source});
-        link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
+        link.source = nodes[link.source] || (nodes[link.source] = {index: link.source, rank: link.rank, artist_name: link.artist_name, similarity: link.weighted_similarity});
+        link.target = nodes[link.target] || (nodes[link.target] = {index: link.target, rank: link.rank, artist_name: link.artist_name, similarity: link.weighted_similarity});
     });
 
     nodes = d3.values(nodes);
@@ -92,17 +95,20 @@ d3.dsv(",", `/run_script?center_node=${center_node}`, function(d) {
 
     // add the nodes
     node.append("circle")
-        .attr("id", function(d){ return (d.name.replace(/\s+/g,'').toLowerCase()); })
+        .attr("id", function(d){ return "hello"; })
         .attr("r", 30)
         .attr("fill", "blue")
-        .attr("cx", function(d){ return 50 + 100*parseInt(d.name); })
-        .attr("cy", 100);
+        .attr("transform", function(d, i) {
+            const x = 100 + 120 * d.rank;
+            const y = 200;
+            return `translate(${x}, ${y})`;
+        })
 
     // // add the labels
     // node.append("text")
-    //     .attr("x", 10)
-    //     .attr("y", -10)
-    //     .text(function(d) { return d.name; });
+    //     .attr("text-anchor", "middle")
+    //     .attr("dominant-baseline", "middle")
+    //     .text(function(d) { return d.artist_name; });
 
     // // add the curvy lines
     // function tick() {

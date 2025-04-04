@@ -19,11 +19,28 @@ def run_script():
         print(f"Running script with center_node: {center_node}")
         result = subprocess.run(['python', './scripts/similarity.py', center_node], capture_output=True, text=True, check=True)
         print(repr(result.stdout))
+
         return result.stdout
     except subprocess.CalledProcessError as e:
-        return jsonify({'error': str(e)}), 500
+        print("Subprocess failed with CalledProcessError")
+        print("STDOUT:", e.stdout)
+        print("STDERR:", e.stderr)
+
+        return jsonify({
+            'error': 'Subprocess failed',
+            'stdout': e.stdout,
+            'stderr': e.stderr
+        }), 500
     except FileNotFoundError:
-        return jsonify({'error': 'Python script not found'}), 404
+        print("Subprocess failed with FileNotFoundError")
+        print("STDOUT:", e.stdout)
+        print("STDERR:", e.stderr)
+
+        return jsonify({
+            'error': 'Python script not found',
+            'stdout': e.stdout,
+            'stderr': e.stderr
+        }), 404
 
 if __name__ == '__main__':
     app.run(debug=True)
