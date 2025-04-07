@@ -97,9 +97,9 @@ if __name__ == '__main__':
     # Processes command-line arguments
     
     if len(sys.argv) > 3: 
-        artist_output = int(sys.argv[3])
+        artist_output = int(sys.argv[3])+1
     else: 
-        artist_output = 10
+        artist_output = 11
     if len(sys.argv) > 2: 
         weights = sys.argv[2][1:-1]
         weights = list(weights.split(','))
